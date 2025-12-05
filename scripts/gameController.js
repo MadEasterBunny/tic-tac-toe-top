@@ -16,7 +16,12 @@ const gameController = (function() {
         ["", "", ""],
         ["", "", ""],
     ];
-    
+
+    const getTarget = (target) => {
+        const row = target.dataset.row;
+        const col = target.dataset.col;
+        return { row, col };
+    }
     
     const setMarker = (player, marker) => {
         let value1 = prompt(`${player}'s turn: Enter first digit between 0 and 2`, 0);
@@ -35,7 +40,7 @@ const gameController = (function() {
             value2 = prompt(`${player}'s turn: Spot already choosen. Please choose another.`, 0);
         }
 
-        gameboard.placeMarker(value1, value2, marker);
+        gameboard.placeMarker(row, col, marker);
     }
     
     const playRound = () => {
@@ -51,10 +56,10 @@ const gameController = (function() {
                 break;
             } else {
                 if(currentTurn % 2 === 0) {
-                    setMarker(player1.playerName ,player1.playerMarker);
+                    setMarker(player1.playerName, player1.playerMarker);
                     currentTurn++;
                 } else {
-                    setMarker(player2.playerName ,player2.playerMarker);
+                    setMarker(player2.playerName, player2.playerMarker);
                     currentTurn++;
                 }
             } 
@@ -137,7 +142,10 @@ const gameController = (function() {
 
     playRound();
 
-    return {
-        updateGameBoardCopy: updateGameBoardCopy,
-    }
+    //bind events
+    const squares = document.querySelectorAll(".square");
+    squares.forEach(square => {
+        square.addEventListener("click", /* need to a handleClick function that'll play the round */);
+    });
+
 })();
