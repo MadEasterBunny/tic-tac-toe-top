@@ -7,7 +7,6 @@ function players (name, marker) {
 const gameController = (function() {
     const dialog = document.querySelector("dialog");
     const form = document.querySelector("form");
-    const startBtn = document.querySelector("#start");
     const winnerText = document.querySelector("#winner");
     const playerTurnText = document.querySelector("#playerTurn");
     const squares = document.querySelectorAll(".square");
@@ -50,7 +49,6 @@ const gameController = (function() {
         for(let i = 0; i < arr.length; i ++) {
             const winner = playerWins(arr[i][0], arr[i][1], arr[i][2]);
             if(winner) {
-                console.log(`Win in row ${i} for ${winner}`);
                 return winner;
             }
         }
@@ -58,7 +56,6 @@ const gameController = (function() {
         for(let j = 0; j < arr.length; j++) {
             const winner = playerWins(arr[0][j], arr[1][j], arr[2][j])
             if(winner) {
-                console.log(`Win in column ${j} for ${winner}`);
                 return winner;
             }
         }
@@ -66,17 +63,14 @@ const gameController = (function() {
         let winner = playerWins(arr[0][0], arr[1][1], arr[2][2]);
 
         if(winner) {
-            console.log(`Win in main diagnal for ${winner}`);
             return winner;
         }
 
         winner = playerWins(arr[0][2], arr[1][1], arr[2][0])
         if(winner) {
-            console.log(`Win in anti-diagonal for ${winner}`);
             return winner;
         }
 
-        console.log(`No winner`);
         return null;
     }
 
@@ -94,10 +88,12 @@ const gameController = (function() {
         const row = getTarget(e.target).row;
         const col = getTarget(e.target).col;
         const currentPlayer = currentTurn % 2 === 0 ? player1 : player2;
-
+        const markerColor = currentPlayer === player1 ? "player1" : "player2";
+        
         if(e.target.innerText === "") {
             gameboard.placeMarker(row, col, currentPlayer.playerMarker);
             e.target.innerText = currentPlayer.playerMarker;
+            e.target.classList.add(markerColor);
             currentTurn++;
         } else {
             return;
@@ -126,6 +122,8 @@ const gameController = (function() {
         playerTurnText.innerText = `${player1.playerName}'s turn`;
         squares.forEach(square => {
             square.innerText = "";
+            square.classList.remove("player1");
+            square.classList.remove("player2");
         });
         restartBtn.classList.remove("active");
     }
@@ -139,7 +137,7 @@ const gameController = (function() {
     dialog.showModal();
 
     //bind events
-    startBtn.addEventListener("click", startGame);
+    form.addEventListener("submit", startGame);
 
     squares.forEach(square => {
         square.addEventListener("click", clickHandler);

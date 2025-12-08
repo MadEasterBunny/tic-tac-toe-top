@@ -7,7 +7,7 @@
   box-sizing: border-box;
 }
 
-* {
+*:not(dialog) {
   margin: 0;
 }
 
@@ -18,6 +18,8 @@
 }
 
 body {
+  background-color: #e1f1ff;
+  font-family: Arial, Helvetica, sans-serif;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
@@ -46,24 +48,117 @@ h1, h2, h3, h4, h5, h6 {
   isolation: isolate;
 }
 
+dialog {
+  border-radius: 25px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+form div {
+  display: flex;
+  flex-direction: column;
+}
+
+button {
+  color: #fff;
+  background-color: #46a3ff;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 4px 3px 5px rgba(0, 0, 0, 0.3);
+  padding: 5px 15px;
+  align-self: center;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+button:hover {
+  transform: scale(1.05);
+  opacity: 0.8;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 15px;
+}
+
 .container {
-    width: 500px;
+  width: 500px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.container > div:first-child {
+  height: 48px;
+}
+
+#winner {
+  font-size: 2rem;
+  text-align: center;
+}
+
+#playerTurn {
+  font-size: 1.5rem;
+  text-align: center;
 }
 
 #gameboard {
-    display: flex;
-    flex-wrap: wrap;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .square {
-    min-width: calc(100% / 3);
-    aspect-ratio: 1 / 1;
-    flex: 1;
-    outline: 1px solid #000;
+  min-width: calc(100% / 3);
+  aspect-ratio: 1 / 1;
+  flex: 1;
+  background-color: #fbfbfb;
+  border: 2px solid #d9d9d9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 6rem;
+}
+
+.square.player1 {
+  color: #fff;
+  background-color: #46a3ff;
+}
+
+.square.player2 {
+  color: #46a3ff;
+  background-color: #fff;
+}
+
+.square:hover {
+  background-color: antiquewhite;
+}
+
+.square:nth-child(-n + 3) {
+  border-top: none;
+}
+
+.square:nth-child(3n) {
+  border-right: none;
+}
+
+.square:nth-child(3n - 2) {
+  border-left: none;
+}
+
+.square:nth-child(n + 7) {
+  border-bottom: none;
 }
 
 #restart {
   display: none;
+  align-self: center;
 }
 
 #restart.active {

@@ -7,24 +7,27 @@
     <title>Tic Tac Toe</title>
 </head>
 <body>
-    <h1>Tic Tac Toe</h1>
-    <p>Click on a square to start playing!</p>
-    <div class="container">
-        <h2 id="winner"></h2>
-        <p id="playerTurn"></p>
-        <div id="gameboard"></div>
-        <button id="restart">Restart</button>
+    <div class="main">
+        <h1>Tic Tac Toe</h1>
+        <div class="container">
+            <div>
+                <h2 id="winner"></h2>
+                <p id="playerTurn"></p>
+            </div>
+            <div id="gameboard"></div>
+            <button id="restart">Restart</button>
+        </div>
     </div>
     <dialog>
-        <form action="">
+        <form>
             <h2>Enter Player Names</h2>
             <div>
                 <label for="player1">Player 1</label>
-                <input type="text" id="player1" placeholder="player1" value="player1">
+                <input type="text" id="player1" placeholder="player1" required>
             </div>
             <div>
                 <label for="player2">Player 2</label>
-                <input type="text" id="player2" placeholder="player2" value="player2">
+                <input type="text" id="player2" placeholder="player2" required>
             </div>
             <button id="start">Start</button>
         </form>
