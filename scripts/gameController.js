@@ -5,12 +5,15 @@ function players (name, marker) {
 }
 
 const gameController = (function() {
+    const winnerText = document.querySelector("#winner");
+    const playerTurnText = document.querySelector("#playerTurn");
+    const squares = document.querySelectorAll(".square");
+    const restartBtn = document.querySelector("#restart");
     const player1 = players("player1", "X");
     const player2 = players("player2", "O");
 
     let currentTurn = 0;
     let gameover = false;
-
     let gameboardCopy = [
         ["", "", ""],
         ["", "", ""],
@@ -23,54 +26,8 @@ const gameController = (function() {
         return { row, col };
     }
     
-    const setMarker = (player, marker) => {
-        let value1 = prompt(`${player}'s turn: Enter first digit between 0 and 2`, 0);
-        let value2 = prompt(`${player}'s turn: Enter second digit between 0 and 2`, 0);
-
-        while(value1 > 8) {
-            value1 = prompt(`${player}'s turn: Please chose a number between 0 and 2 (value 1)`, 0);
-        }
-
-        while(value2 > 8) {
-            value2 = prompt(`${player}'s turn: Please chose a number between 0 and 2 (value 2)`, 0);
-        }
-
-        while(gameboardCopy[value1][value2] !== "") {
-            value1 = prompt(`${player}'s turn: Spot already choosen. Please choose another.`, 0);
-            value2 = prompt(`${player}'s turn: Spot already choosen. Please choose another.`, 0);
-        }
-
-        gameboard.placeMarker(row, col, marker);
-    }
-    
-    const playRound = () => {
-        while(gameover === false) {
-            const winner = determineWinner(gameboardCopy);
-            
-            if(winner) {
-                console.log(winner);
-                gameover = true;
-                break;
-            } else if(currentTurn === 9) {
-                gameover = true;
-                break;
-            } else {
-                if(currentTurn % 2 === 0) {
-                    setMarker(player1.playerName, player1.playerMarker);
-                    currentTurn++;
-                } else {
-                    setMarker(player2.playerName, player2.playerMarker);
-                    currentTurn++;
-                }
-            } 
-        }
-        
-        gameOver();
-    }
-
     const updateGameBoardCopy = (gameboard) => {
         gameboardCopy = gameboard;
-        console.log("Gameboard copy", gameboardCopy);
     }
     
     events.on("boardChanged", updateGameBoardCopy);
@@ -81,7 +38,11 @@ const gameController = (function() {
                 return false;
             }
             if(value1 === value2 && value1 === value3) {
-                return value1;
+                if(value1 === "X") {
+                    return "player1"
+                } else {
+                    return "player2"
+                }
             }
 
             return null;
@@ -103,7 +64,7 @@ const gameController = (function() {
             }
         }
 
-        let winner = playerWins(arr[0][0], arr[1][1], arr[2][2])
+        let winner = playerWins(arr[0][0], arr[1][1], arr[2][2]);
 
         if(winner) {
             console.log(`Win in main diagnal for ${winner}`);
@@ -120,32 +81,57 @@ const gameController = (function() {
         return null;
     }
 
-    const gameOver = () => {
-        console.log("Game Over");
+    const playRound = (e) => {
+        const row = getTarget(e.target).row;
+        const col = getTarget(e.target).col;
+        const currentPlayer = currentTurn % 2 === 0 ? player1 : player2;
 
-        //display a button that calls the following function + a wipe of an other ui elements i add
-        const restart = prompt("Would you like to play again?", "yes");
-
-        if(restart.toLowerCase() === "restart" || restart.toLowerCase() === "yes") {
-            restartGame(); //call this on Restart Game button press when ui is added
+        if(e.target.innerText === "") {
+            gameboard.placeMarker(row, col, currentPlayer.playerMarker);
+            e.target.innerText = currentPlayer.playerMarker;
+            currentTurn++;
         } else {
             return;
         }
+    }
+
+    const checkGameStatus = () => {
+        const winner = determineWinner(gameboardCopy);
+        const currentPlayer = currentTurn % 2 === 0 ? player1 : player2;
+
+        playerTurnText.innerText = `${currentPlayer.playerName}'s turn`
+
+        if(winner || currentTurn === 9) {
+            gameover = true;
+            winnerText.innerText = winner ? `${winner} wins!` : "No winner. Game Over";
+            playerTurnText.innerText = "";
+            restartBtn.classList.add("active");
+        }
+    }
+
+    const clickHandler = (e) => {
+        if(gameover) return;
+        playRound(e);
+        checkGameStatus();
     }
 
     const restartGame = () => {
         gameboard.resetBoard();
         currentTurn = 0;
         gameover = false;
-        playRound();
+        winnerText.innerText = "";
+        playerTurnText.innerText = "player1's turn";
+        squares.forEach(square => {
+            square.innerText = "";
+        });
+        restartBtn.classList.remove("active");
     }
 
-    playRound();
-
     //bind events
-    const squares = document.querySelectorAll(".square");
     squares.forEach(square => {
-        square.addEventListener("click", /* need to a handleClick function that'll play the round */);
+        square.addEventListener("click", clickHandler);
     });
+
+    restartBtn.addEventListener("click", restartGame);
 
 })();
