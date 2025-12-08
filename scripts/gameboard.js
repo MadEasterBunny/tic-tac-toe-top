@@ -9,10 +9,10 @@ const gameboard = (function() {
     const gameboardEl = document.querySelector("#gameboard");
     
     function _render() {
-        createGrid();
+        _createGrid();
     }
 
-    function createGrid() {
+    function _createGrid() {
         for (let row = 0; row < gameboard.length; row++) {
             for (let col = 0; col < gameboard[row].length; col++) {
                 const square = document.createElement('div');

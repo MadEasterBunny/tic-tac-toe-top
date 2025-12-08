@@ -5,13 +5,16 @@ function players (name, marker) {
 }
 
 const gameController = (function() {
+    const dialog = document.querySelector("dialog");
+    const form = document.querySelector("form");
+    const startBtn = document.querySelector("#start");
     const winnerText = document.querySelector("#winner");
     const playerTurnText = document.querySelector("#playerTurn");
     const squares = document.querySelectorAll(".square");
     const restartBtn = document.querySelector("#restart");
-    const player1 = players("player1", "X");
-    const player2 = players("player2", "O");
 
+    let player1 = null;
+    let player2 = null;
     let currentTurn = 0;
     let gameover = false;
     let gameboardCopy = [
@@ -38,11 +41,7 @@ const gameController = (function() {
                 return false;
             }
             if(value1 === value2 && value1 === value3) {
-                if(value1 === "X") {
-                    return "player1"
-                } else {
-                    return "player2"
-                }
+                return value1 === "X" ? player1.playerName : player2.playerName;
             }
 
             return null;
@@ -81,6 +80,16 @@ const gameController = (function() {
         return null;
     }
 
+    const startGame = (e) => {
+        e.preventDefault();
+        const player1Name = form.elements.player1.value;
+        const player2Name = form.elements.player2.value;
+        player1 = players(player1Name, "X");
+        player2 = players(player2Name, "O");
+        playerTurnText.innerText = `${player1.playerName}'s turn`;
+        dialog.close();
+    }
+
     const playRound = (e) => {
         const row = getTarget(e.target).row;
         const col = getTarget(e.target).col;
@@ -99,7 +108,7 @@ const gameController = (function() {
         const winner = determineWinner(gameboardCopy);
         const currentPlayer = currentTurn % 2 === 0 ? player1 : player2;
 
-        playerTurnText.innerText = `${currentPlayer.playerName}'s turn`
+        playerTurnText.innerText = `${currentPlayer.playerName}'s turn`;
 
         if(winner || currentTurn === 9) {
             gameover = true;
@@ -109,25 +118,29 @@ const gameController = (function() {
         }
     }
 
-    const clickHandler = (e) => {
-        if(gameover) return;
-        playRound(e);
-        checkGameStatus();
-    }
-
     const restartGame = () => {
         gameboard.resetBoard();
         currentTurn = 0;
         gameover = false;
         winnerText.innerText = "";
-        playerTurnText.innerText = "player1's turn";
+        playerTurnText.innerText = `${player1.playerName}'s turn`;
         squares.forEach(square => {
             square.innerText = "";
         });
         restartBtn.classList.remove("active");
     }
 
+    const clickHandler = (e) => {
+        if(gameover) return;
+        playRound(e);
+        checkGameStatus();
+    }
+
+    dialog.showModal();
+
     //bind events
+    startBtn.addEventListener("click", startGame);
+
     squares.forEach(square => {
         square.addEventListener("click", clickHandler);
     });

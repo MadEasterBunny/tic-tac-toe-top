@@ -11,10 +11,24 @@
     <p>Click on a square to start playing!</p>
     <div class="container">
         <h2 id="winner"></h2>
-        <p id="playerTurn">player1's turn</p>
+        <p id="playerTurn"></p>
         <div id="gameboard"></div>
         <button id="restart">Restart</button>
     </div>
+    <dialog>
+        <form action="">
+            <h2>Enter Player Names</h2>
+            <div>
+                <label for="player1">Player 1</label>
+                <input type="text" id="player1" placeholder="player1" value="player1">
+            </div>
+            <div>
+                <label for="player2">Player 2</label>
+                <input type="text" id="player2" placeholder="player2" value="player2">
+            </div>
+            <button id="start">Start</button>
+        </form>
+    </dialog>
     <script src="scripts/pubsub.js"></script>
     <script src="scripts/gameboard.js"></script>
     <script src="scripts/gameController.js"></script>
